@@ -137,7 +137,7 @@ export class ComponChart extends Component {
     )
   }
 
-  theBodyCard(index, ltrColor, rtlColor, length) {
+  theBodyCard(index, ltrColor, rtlData, length) {
     let head = {};
     let body = {};
     let foot = {};
@@ -152,11 +152,11 @@ export class ComponChart extends Component {
       }
       body = <Pipe.Body key={'body-' + index} color={ltrColor} height={55 - index*10}/>;
     } else {
-      head = <Pipe.Head className="pipe-head" key={'head-' + index}><Edge.Right color={rtlColor}/></Pipe.Head>
+      head = <Pipe.Head className="pipe-head" key={'head-' + index}><Edge.Right color={rtlData.color}/></Pipe.Head>
       body = (
-        <Pipe.BodyEnd key={'body-' + index} ltrColor={ltrColor} rtlColor={rtlColor} height={55 - index*10}>
-          <Pipe.BodyChild width={50} color={rtlColor}>
-            <Pipe.BodyChildValue width={50} color={rtlColor} />
+        <Pipe.BodyEnd key={'body-' + index} ltrColor={ltrColor} rtlColor={rtlData.color} height={55 - index*10}>
+          <Pipe.BodyChild color={rtlData.color}>
+            <Pipe.BodyChildValue width={rtlData.width * 100} color={rtlData.color} />
           </Pipe.BodyChild>
         </Pipe.BodyEnd>
       );
@@ -213,7 +213,7 @@ export class ComponChart extends Component {
       cards.push(
         <Card key={i} width={ltrData[i].width*100}>
           {this.theHeadCard(ltrData[i].title,ltrData[i].subtitle)}
-          {this.theBodyCard(i,ltrData[i].color,rtlData[0].color,length)}
+          {this.theBodyCard(i,ltrData[i].color,rtlData[0],length)}
           {this.theFootCard(i,ltrData[i],rtlData[0],length)}
         </Card>
       )
