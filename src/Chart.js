@@ -70,17 +70,17 @@ const Pipe = {};
 Pipe.Head = styled.div`
   height: 10px;
 `
-Pipe.Body = styled.div`
-  height: ${props => props.height}px;
-  background-color: ${props => props.color};
-  position: relative;
-`
+// Pipe.Body = styled.div`
+//   height: ${props => props.height}px;
+//   background-color: ${props => props.color};
+//   position: relative;
+// `
 
-Pipe.BodyEnd = styled.div`
+Pipe.Body = styled.div`
   height: ${props => props.height}px;
   background-color: ${props => props.ltrColor};
   position: relative;
-  border-right: 2px solid ${props => props.rtlColor};
+  border-right: ${props =>('2px solid ' + props.rtlColor)};
 `
 
 Pipe.BodyChildContainer = styled.div`
@@ -89,8 +89,8 @@ Pipe.BodyChildContainer = styled.div`
 `
 
 Pipe.BodyChild = styled.div`
-  width: 99%;
-  height: 5px;
+  width: 100%;
+  height: ${props => props.height}px;
   bottom: 0;
   right: 0;
   position: absolute;
@@ -103,7 +103,8 @@ Pipe.BodyChildValue = styled.div`
 `
 
 Pipe.Foot = styled.div`
-  height: 10px;
+  height: ${props => props.height}px;
+  position: absolute;
 `
 Card.Foot = styled.div`
   height: 35px;
@@ -127,7 +128,7 @@ export class ComponChart extends Component {
   theHeadCard(title, subtitle) {
     return(
       <Card.Head className="card-header">
-        <Card.Row className="card-header-title">
+        <Card.Row className="card-header-sub-title">
           <Card.HeaderTextSmall className="right">{title}</Card.HeaderTextSmall>
         </Card.Row>
         <Card.Row className="card-header-title">
@@ -137,66 +138,79 @@ export class ComponChart extends Component {
     )
   }
 
-  theBodyCard(index, ltrColor, rtlData, length) {
+  theBodyCard(index, ltrColor, rtlData, length, _rtl) {
     let head = {};
     let body = {};
-    let foot = {};
     const rows = [];
     if (index !== (length - 1)) {
       if (index === 0) {
-        head = <Pipe.Head className="pipe-head" key={'head-' + index}><Edge.Right color={ltrColor}/></Pipe.Head>
-        foot = <Pipe.Foot key={'foot-' + index}/>;
+        head = <Pipe.Head className="pipe-header" key={'head-' + index}><Edge.Right color={ltrColor}/></Pipe.Head>
+        body = (
+          <Pipe.Body className="pipe-body" key={'body-' + index} ltrColor={ltrColor} height={55 - index*10}>
+            <Pipe.BodyChild color={rtlData.color} height={25 - index*5 }>
+              <Pipe.BodyChildValue width={_rtl.width * 100} color={rtlData.color} />
+            </Pipe.BodyChild>
+            <Pipe.Foot className="pipe-footer" key={'foot-' + index} height={55 + index*5}/>
+          </Pipe.Body>
+        )
       } else {
-        head = <Pipe.Head className="pipe-head" key={'head-' + index}/>;
-        foot = <Pipe.Foot key={'foot-' + index}><Edge.Left color={ltrColor}/></Pipe.Foot>;
+        head = <Pipe.Head className="pipe-header" key={'head-' + index}/>;
+        body = (
+          <Pipe.Body className="pipe-body" key={'body-' + index} ltrColor={ltrColor} height={55 - index*10}>
+            <Pipe.BodyChild color={rtlData.color} height={25 - index*5 }>
+              <Pipe.BodyChildValue width={_rtl.width * 100} color={rtlData.color} />
+            </Pipe.BodyChild>
+            <Pipe.Foot className="pipe-footer" key={'foot-' + index} height={65 - index*10}>
+              <Edge.Left color={ltrColor}/>
+            </Pipe.Foot>
+          </Pipe.Body>
+        );
       }
-      body = <Pipe.Body key={'body-' + index} color={ltrColor} height={55 - index*10}/>;
     } else {
-      head = <Pipe.Head className="pipe-head" key={'head-' + index}><Edge.Right color={rtlData.color}/></Pipe.Head>
+      head = <Pipe.Head className="pipe-header" key={'head-' + index}><Edge.Right color={rtlData.color}/></Pipe.Head>
       body = (
-        <Pipe.BodyEnd key={'body-' + index} ltrColor={ltrColor} rtlColor={rtlData.color} height={55 - index*10}>
-          <Pipe.BodyChild color={rtlData.color}>
-            <Pipe.BodyChildValue width={rtlData.width * 100} color={rtlData.color} />
+        <Pipe.Body className="pipe-body" key={'body-' + index} ltrColor={ltrColor} rtlColor={rtlData.color} height={55 - index*10}>
+          <Pipe.BodyChild color={rtlData.color} height={25 - index*5 }>
+            <Pipe.BodyChildValue width={_rtl.width * 100} color={rtlData.color} />
           </Pipe.BodyChild>
-        </Pipe.BodyEnd>
+          <Pipe.Foot className="pipe-footer" key={'foot-' + index} height={65 - index*10}><Edge.Left color={ltrColor}/></Pipe.Foot>
+        </Pipe.Body>
       );
-      foot = <Pipe.Foot key={'foot-' + index}><Edge.Left color={ltrColor}/></Pipe.Foot>;
     }
     rows.push(head);
     rows.push(body);
-    rows.push(foot);
-    return <Card.Body className="pipe-wrapper">{rows}</Card.Body>;
+    return <Card.Body className="card-body">{rows}</Card.Body>;
   }
 
   theFootCard(index, ltrData, rtlData, length) {
     if (index === 0) return (
-      <Card.Foot>
-        <Card.Row className="card-header-title">
+      <Card.Foot className="card-footer">
+        <Card.Row className="card-footer-title">
           <Card.FooterTextLarge className="left">{ltrData.label}</Card.FooterTextLarge>
         </Card.Row>
       </Card.Foot>
     )
     if (index !== (length - 1)) {
       return (
-        <Card.Foot>
-          <Card.Row className="card-foot-sub-title">
-            <Card.FooterTextSmall color={ltrData.color} className="left">
+        <Card.Foot className="card-footer">
+          <Card.Row className="card-footer-sub-title">
+            <Card.FooterTextSmall className="left" color={ltrData.color} >
               {ltrData.label}
             </Card.FooterTextSmall>
           </Card.Row>
-          <Card.Row className="card-foot-title">
+          <Card.Row className="card-footer-title">
             <Card.FooterTextLarge className="left">{ltrData.sublabel}</Card.FooterTextLarge>
           </Card.Row>
         </Card.Foot>
       )
     }
     return (
-      <Card.Foot>
-        <Card.Row className="card-foot-sub-title">
-          <Card.FooterTextSmall color={ltrData.color} className="left">{ltrData.label}</Card.FooterTextSmall>
-          <Card.FooterTextSmall color={rtlData.color} className="right">{rtlData.label}</Card.FooterTextSmall>
+      <Card.Foot className="card-footer">
+        <Card.Row className="card-footer-sub-title">
+          <Card.FooterTextSmall className="left" color={ltrData.color}>{ltrData.label}</Card.FooterTextSmall>
+          <Card.FooterTextSmall className="right" color={rtlData.color}>{rtlData.label}</Card.FooterTextSmall>
         </Card.Row>
-        <Card.Row className="card-foot-title">
+        <Card.Row className="card-footer-title">
           <Card.FooterTextLarge className="left">{ltrData.sublabel}</Card.FooterTextLarge>
           <Card.FooterTextLarge className="right">{rtlData.sublabel}</Card.FooterTextLarge>
         </Card.Row>
@@ -205,26 +219,71 @@ export class ComponChart extends Component {
   }
 
   render() {
-    const cards = [];
+    const cards = [], array_tmp = [];
+    let rtlWidth = 0;
     const ltrData = this.props.data["ltr-data"];
     const rtlData = this.props.data["rtl-data"];
     const length = ltrData.length;
+
+    this.getRtlItemWidth(rtlWidth, ltrData, rtlData, array_tmp);
+
     for (let i = 0; i < length; i++) {
       cards.push(
-        <Card key={i} width={ltrData[i].width*100}>
+        <Card className="card" key={i} width={ltrData[i].width*100}>
           {this.theHeadCard(ltrData[i].title,ltrData[i].subtitle)}
-          {this.theBodyCard(i,ltrData[i].color,rtlData[0],length)}
+          {this.theBodyCard(i,ltrData[i].color,rtlData[0],length, this.findItem(array_tmp,i))}
           {this.theFootCard(i,ltrData[i],rtlData[0],length)}
         </Card>
       )
     }
     return (
       <React.Fragment>
-        <Wrapper>
+        <Wrapper className="wrapper">
           {cards}
         </Wrapper>
       </React.Fragment>
     );
+  }
+
+  findItem(items, index) {
+    return items.find(item => {
+      return item.index === index;
+    })
+  }
+
+  getRtlItemWidth(rtlWidth, ltrData, rtlData, array_tmp) {
+    for (let i = ltrData.length - 1; i >= 0; i--) {
+      rtlWidth += ltrData[i].width;
+      if (rtlWidth <= ltrData[i].width) {
+        if (rtlWidth >= rtlData[0].width) {
+          array_tmp.push({
+            index: i,
+            width: rtlData[0].width / ltrData[i].width
+          })
+        } else {
+          array_tmp.push({
+            index: i,
+            width: 1
+          })
+        }
+      }
+      else {
+        let numb  = 0;
+        const rtlItemWidth = rtlData[0].width - (rtlWidth - ltrData[i].width);
+        if (rtlItemWidth >= ltrData[0].width) {
+          numb = 1;
+        } else if (rtlItemWidth < 0) {
+          numb = 0;
+        } else {
+          numb = rtlItemWidth / ltrData[i].width;
+        }
+        array_tmp.push({
+          index: i,
+          width: numb
+        })
+      }
+    }
+    return array_tmp;
   }
 }
 

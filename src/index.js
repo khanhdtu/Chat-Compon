@@ -17,25 +17,25 @@ class App extends React.Component {
           "title": "Budget used",
           "subtitle": "$0.8M",
           "label": "Paid",
-          "width": 0.25,
+          "width": 0.2,
           "color": "#212529"
         },
         {
           "label": "Due soon (7 days or less)",
           "sublabel": "$280K",
-          "width": 0.15,
+          "width": 0.2,
           "color": "#7f7f7f"
         },
         {
           "label": "Overdue",
           "sublabel": "$89K",
-          "width": 0.19,
+          "width": 0.2,
           "color": "#f7ebde"
         },
         {
           "label": "New",
           "sublabel": "$400K",
-          "width": 0.22,
+          "width": 0.2,
           "color": "#b79c7f"
         },
         {
@@ -43,7 +43,7 @@ class App extends React.Component {
           "subtitle": "$2.5M",
           "label": "Remains",
           "sublabel": "$931K",
-          "width": 0.19,
+          "width": 0.2,
           "color": "#c3c3c3"
         }
       ],
@@ -51,7 +51,7 @@ class App extends React.Component {
         {
           "label": "Potential Savings",
           "sublabel": "$381K",
-          "width": 0.327,
+          "width": 0.45678,
           "color": "#85cdff"
         }
       ]
